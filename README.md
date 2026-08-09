@@ -1,58 +1,90 @@
-# Delivery-Agent-Sysytem
+# Delivery Agent System
 
-Problem Statement: 
+A C++ console application that simulates a basic delivery management workflow for three roles:
+- **Customer**: place, track, cancel, reschedule, and view past orders
+- **Courier Service**: register courier details and update delivery status
+- **Admin**: generate delivery reports from stored order records
 
-P03: Delivery Agent System
+The project stores data in simple text files and provides a menu-driven terminal interface.
 
-There are many online shopping portals such as Flipkart, Amazon, Snapdeal, etc. are active in the Indian market. 
-One major task is to deliver an online books products to the customers as first as possible in a cost-effective (cheapest) manner. 
-A delivery agent system, which would automatically receive a delivery request from an online portal and identify the couriers, 
-whom the delivery job can be assigned.
+## Project Structure
 
+- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/main.cpp` - entry point and role-based menus
+- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/customer.cpp` - customer operations
+- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/courierservice.cpp` - courier service operations
+- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/admin.cpp` - admin reporting
+- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Makefile` - build instructions
 
-#Input:
->Shipping details (source and destination) locations.
+## Features
 
->Couriers' details in different localities.
+### Customer
+- Book a delivery (name and shipping address)
+- View order status by order ID
+- Cancel an order by order ID
+- View past records by customer name
+- Reschedule an order
 
->Service offering for each courier company.
+### Courier Service
+- Add courier company details and pricing information
+- Update order status by order ID
 
-#Functions:
->Booking delivery.
+### Admin
+- Generate a tabular report of all delivery records
 
->Status of delivery.
+## Data Files
 
->Cancellation of booking.
+The application creates/updates these files in the repository root while running:
+- `database.txt` - customer order records
+- `order_id.txt` - latest generated order ID
+- `compdatabase.txt` - courier service/company entries
+- `temp.txt` - temporary file used during update/delete operations
 
->Delivery rescheduling.
+## Requirements
 
->Reward and penalty calculation.
+- C++ compiler with C++11 support (`g++` recommended)
+- `make`
+- Console environment that supports `conio.h` (`_getch`) used by this codebase
 
->Archiving record of past services.
+## Build and Run
 
+From the repository root:
 
-#Output:
->Booking confirmation, if booking is successful.
+```bash
+cd /home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem
+make
+./devilery_agent_system
+```
 
->Reporting delivery status.
+> Note: The executable name is currently `devilery_agent_system` (matching the existing Makefile target).
 
->Cancellation of booking confirmation.
+## Usage Flow
 
->Update record on delivery rescheduling.
+1. Start the program.
+2. Choose one role:
+   - `1` Customer
+   - `2` Admin
+   - `3` Courier Service
+   - `4` Exit
+3. Follow the menu options shown for the selected role.
+4. Use generated **Order ID** values to track, update, or cancel orders.
 
->Update record and intimation on reward and penalty calculation.
+## Known Limitations
 
->Query generation on record of past service, given a courier agency.
+- Data is stored in plain text files (no database).
+- No authentication/authorization between user roles.
+- Input validation is minimal.
+- The codebase uses platform-specific headers (`conio.h`), which may require a compatible compiler/environment.
 
+## Clean Build Artifacts
 
+```bash
+make clean
+```
 
-#Instructions:
+## Future Improvements
 
->Open the folder.
-
->Open the directory of the extracted folder in terminal using administrator mode.
-
->Use command "make" to complile all the file into one executable file named delivery_agent_system.
-
->Use command "./delivery_agent_system.exe" to run the program.
-
+- Replace text-file storage with a proper database
+- Add stronger validation and error handling
+- Add role authentication
+- Add unit/integration tests
+- Make the build fully cross-platform
