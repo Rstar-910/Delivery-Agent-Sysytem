@@ -1,55 +1,52 @@
 #include <iostream>
-#include <fstream>
+#include <map>
 #include <iomanip>
-#include <conio.h>
+#include <vector>
+
+#include "common.h"
 
 using namespace std;
 
 void generateReport()
 {
-    ifstream file("database.txt");
+    vector<Order> orders = loadOrders();
+    map<string, int> statusCount;
 
-    if (!file.is_open())
-    {
-        cout << "Error opening file!" << endl;
-        return;
-    }
-
-    string line;
-    int recordCount = 0;
     cout << "Generating report...\n";
-    cout << "-------------------------------------------------------------------------\n";
-    cout << left << setw(10) << "Name" << setw(15) << "Order ID" << setw(25) << "Address" << setw(15) << "Status" << endl;
-    cout << "------------------------------------------------------------------------\n";
+    cout << "------------------------------------------------------------------------------------------------\n";
+    cout << left << setw(10) << "Order ID"
+         << setw(18) << "Customer"
+         << setw(30) << "Address"
+         << setw(16) << "Status"
+         << setw(14) << "Scheduled" << "\n";
+    cout << "------------------------------------------------------------------------------------------------\n";
 
-    while (getline(file, line))
+    for (size_t i = 0; i < orders.size(); i++)
     {
-        size_t first_comma = line.find(',');
-        size_t second_comma = line.find(',', first_comma + 1);
-        size_t third_comma = line.find(',', second_comma + 1);
-        size_t fourth_comma = line.find(',', third_comma + 1);
-
-        string name = line.substr(0, first_comma);
-        string order_id = line.substr(first_comma + 1, second_comma - first_comma - 1);
-        string address = line.substr(second_comma + 1, third_comma - second_comma - 1);
-        string status = line.substr(third_comma + 1, fourth_comma - third_comma - 1);
-
-        cout << left << setw(10) << name << setw(15) << order_id << setw(25) << address << setw(15) << status << endl;
-        recordCount++;
+        cout << left << setw(10) << orders[i].orderId
+             << setw(18) << orders[i].customerName
+             << setw(30) << orders[i].address
+             << setw(16) << orders[i].status
+             << setw(14) << orders[i].scheduledDate << "\n";
+        statusCount[orders[i].status]++;
     }
 
-    if (recordCount == 0)
+    if (orders.empty())
     {
-        cout << "No records found in the database." << endl;
+        cout << "No records found in the database.\n";
     }
     else
     {
-        cout << "------------------------------------------------------------------------\n";
-        cout << "Total records: " << recordCount << endl;
+        cout << "------------------------------------------------------------------------------------------------\n";
+        cout << "Total records: " << orders.size() << "\n";
+        cout << "Status Summary:\n";
+
+        for (map<string, int>::const_iterator it = statusCount.begin(); it != statusCount.end(); ++it)
+        {
+            cout << "- " << it->first << ": " << it->second << "\n";
+        }
     }
 
-    file.close();
-    cout << "Press any key to exit!!!";
-    _getch();
-    cout << "\033[2J\033[H";
+    pauseForUser();
+    clearScreen();
 }

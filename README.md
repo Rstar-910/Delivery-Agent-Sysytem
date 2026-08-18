@@ -1,28 +1,37 @@
 # Delivery Agent System
 
-A C++ console application that simulates a basic delivery management workflow for three roles:
+A C++ console application that simulates a delivery management workflow for three roles:
 - **Customer**: place, track, cancel, reschedule, and view past orders
 - **Courier Service**: register courier details and update delivery status
 - **Admin**: generate delivery reports from stored order records
 
-The project stores data in simple text files and provides a menu-driven terminal interface.
+The project uses a normalized **SQLite-backed** storage layer and a menu-driven terminal interface.
+
+## Resume Highlights
+
+- Designed and implemented a **role-based logistics workflow** (Customer, Courier, Admin) using modular C++ components.
+- Built a reusable **order data model** and SQLite persistence utilities for consistent storage, retrieval, and updates.
+- Added **input validation and state-aware business rules** (cancel, reschedule, status update) to improve reliability.
+- Implemented **admin analytics reporting** with status-wise summaries for operational visibility.
+- Improved **cross-platform compatibility** by removing non-portable dependencies and standardizing build steps.
 
 ## Project Structure
 
-- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/main.cpp` - entry point and role-based menus
-- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/customer.cpp` - customer operations
-- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/courierservice.cpp` - courier service operations
-- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Source/admin.cpp` - admin reporting
-- `/home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem/Makefile` - build instructions
+- `Source/main.cpp` - entry point and role-based menus
+- `Source/customer.cpp` - customer workflows
+- `Source/courierservice.cpp` - courier service workflows
+- `Source/admin.cpp` - admin reporting and status summary
+- `Source/common.cpp` - shared order persistence, input handling, and console utilities
+- `Makefile` - build instructions
 
 ## Features
 
 ### Customer
 - Book a delivery (name and shipping address)
-- View order status by order ID
-- Cancel an order by order ID
+- View full order details by order ID
+- Cancel an order by order ID (status-based cancellation)
 - View past records by customer name
-- Reschedule an order
+- Reschedule an order with updated delivery date
 
 ### Courier Service
 - Add courier company details and pricing information
@@ -30,32 +39,30 @@ The project stores data in simple text files and provides a menu-driven terminal
 
 ### Admin
 - Generate a tabular report of all delivery records
+- View aggregate status summary (e.g., Booked, InTransit, Delivered)
 
-## Data Files
+## Data Storage
 
-The application creates/updates these files in the repository root while running:
-- `database.txt` - customer order records
-- `order_id.txt` - latest generated order ID
-- `compdatabase.txt` - courier service/company entries
-- `temp.txt` - temporary file used during update/delete operations
+The application creates/updates this database file in the repository root while running:
+- `delivery_agent.db` - SQLite database containing:
+   - `orders(order_id, customer_name, address, status, scheduled_date, created_at)`
+   - `courier_companies(id, company_name, contact_number, location, packaging_price, discount, created_at)`
 
 ## Requirements
 
 - C++ compiler with C++11 support (`g++` recommended)
 - `make`
-- Console environment that supports `conio.h` (`_getch`) used by this codebase
+- SQLite3 development library (`sqlite3` / `libsqlite3`)
 
 ## Build and Run
 
 From the repository root:
 
 ```bash
-cd /home/runner/work/Delivery-Agent-Sysytem/Delivery-Agent-Sysytem
+cd /path/to/Delivery-Agent-Sysytem
 make
-./devilery_agent_system
+./delivery_agent_system
 ```
-
-> Note: The executable name is currently `devilery_agent_system` (matching the existing Makefile target).
 
 ## Usage Flow
 
@@ -70,10 +77,8 @@ make
 
 ## Known Limitations
 
-- Data is stored in plain text files (no database).
-- No authentication/authorization between user roles.
-- Input validation is minimal.
-- The codebase uses platform-specific headers (`conio.h`), which may require a compatible compiler/environment.
+- No authentication or authorization between roles.
+- Single-process local execution only (no API/network layer).
 
 ## Clean Build Artifacts
 
@@ -83,7 +88,6 @@ make clean
 
 ## Future Improvements
 
-- Replace text-file storage with a proper database
 - Add stronger validation and error handling
 - Add role authentication
 - Add unit/integration tests
