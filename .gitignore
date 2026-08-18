@@ -1,0 +1,9 @@
+# Build artifacts
+*.o
+delivery_agent_system
+
+# Local runtime data
+delivery_agent.db
+
+# OS/editor noise
+.DS_Store
